@@ -10,7 +10,7 @@ class IframeDisplay extends React.Component {
 
         return (
             <div style={iframeContainerStyle}>
-                <iframe width="1920" height="1080" src="https://lookerstudio.google.com/embed/reporting/c8f1788c-21c5-45ee-97ae-bcb2efa38942/page/vSzfD" frameborder="0" style={{border:0}} allowfullscreen></iframe>
+                <iframe width="1920" height="1080" src="" frameborder="0" style={{border:0}} allowfullscreen></iframe>
             </div>
         );
     }
