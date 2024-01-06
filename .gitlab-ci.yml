@@ -5,8 +5,9 @@ stages:
 build_docker_image:
   stage: build
   script:
+    - echo $GCLOUD_SERVICE_KEY | base64 --decode > decoded-service-account.json
     - docker build -t us-central1-docker.pkg.dev/matsyaonline/matsya-container-repo-dev/matsya-capital-fe:${CI_COMMIT_SHA} .
-    - echo $GCLOUD_SERVICE_KEY | docker login -u _json_key --password-stdin https://us-central1-docker.pkg.dev
+    - cat decoded-service-account.json | docker login -u _json_key --password-stdin https://us-central1-docker.pkg.dev
     - docker push us-central1-docker.pkg.dev/matsyaonline/matsya-container-repo-dev/matsya-capital-fe:${CI_COMMIT_SHA}
   only:
     - master
@@ -14,7 +15,8 @@ build_docker_image:
 deploy_to_gke:
   stage: deploy
   script:
-    - echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+    - echo $GCLOUD_SERVICE_KEY | base64 --decode > decoded-service-account.json
+    - gcloud auth activate-service-account --key-file=decoded-service-account.json
     - gcloud container clusters get-credentials autopilot-cluster-1 --zone us-central1 --project matsyaonline
     - kubectl set image deployment/my-app my-app=us-central1-docker.pkg.dev/matsyaonline/matsya-container-repo-dev/matsya-capital-fe:${CI_COMMIT_SHA}
   only:
