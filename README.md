@@ -73,3 +73,6 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 =======
 # fe
 >>>>>>> d0fde615b09c0bfcc971781a58cae52aa7a7fb6b
+> 
+> [![pipeline status](https://gitlab.com/vramonlinebsc/fe/badges/main/pipeline.svg)](https://gitlab.com/vramonlinebsc/fe/-/commits/main)
+
