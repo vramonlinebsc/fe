@@ -4,8 +4,14 @@ stages:
 
 build_docker_image:
   stage: build
-  script:
+  image: docker:19.03.12
+  services:
+    - docker:19.03.12-dind
+  before_script:
+    - apk add --no-cache curl python3 py3-pip
+    - pip3 install docker-compose
     - echo $GCLOUD_SERVICE_KEY | base64 --decode > decoded-service-account.json
+  script:
     - docker build -t us-central1-docker.pkg.dev/matsyaonline/matsya-container-repo-dev/matsya-capital-fe:${CI_COMMIT_SHA} .
     - cat decoded-service-account.json | docker login -u _json_key --password-stdin https://us-central1-docker.pkg.dev
     - docker push us-central1-docker.pkg.dev/matsyaonline/matsya-container-repo-dev/matsya-capital-fe:${CI_COMMIT_SHA}
@@ -14,6 +20,7 @@ build_docker_image:
 
 deploy_to_gke:
   stage: deploy
+  image: google/cloud-sdk:alpine
   script:
     - echo $GCLOUD_SERVICE_KEY | base64 --decode > decoded-service-account.json
     - gcloud auth activate-service-account --key-file=decoded-service-account.json
